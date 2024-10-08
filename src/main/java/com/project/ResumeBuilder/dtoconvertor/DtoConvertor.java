@@ -1,24 +1,23 @@
 package com.project.ResumeBuilder.dtoconvertor;
 
-import com.project.ResumeBuilder.indto.UserRequest;
+import com.project.ResumeBuilder.entities.Users;
+import com.project.ResumeBuilder.indto.RegisterRequest;
 import com.project.ResumeBuilder.outdto.UserResponse;
-import com.project.ResumeBuilder.entities.User;
 
 public class DtoConvertor{
-    public static UserResponse convertToResponse(User user) {
+    public static UserResponse convertToResponse(Users users) {
         UserResponse userResponse = new UserResponse();
-        userResponse.setUserId(user.getUserId());
-        userResponse.setUserEmail(user.getUserEmail());
-        userResponse.setUserName(user.getUserName());
-        userResponse.setUserRole(user.getUserRole());
+        userResponse.setUserId(users.getUserId());
+        userResponse.setUserEmail(users.getEmail());
+        userResponse.setUserRole(users.getRole());
         return userResponse;
     }
-    public static User convertToEntity(UserRequest userRequest) {
-        User user = new User();
-        user.setUserEmail(userRequest.getUserEmail());
-        user.setUserName(userRequest.getUserName());
-        user.setUserPassword(userRequest.getUserPassword());
-        user.setUserRole(userRequest.getUserRole());
-        return user;
+    public static Users convertToEntity(RegisterRequest registerRequest) {
+        Users users = new Users();
+        users.setEmail(registerRequest.getEmail());
+        users.setName(registerRequest.getName());
+        users.setPassword(registerRequest.getPassword());
+        users.setRole(registerRequest.getRole());
+        return users;
     }
 }
