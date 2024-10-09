@@ -1,16 +1,14 @@
 package com.project.ResumeBuilder.entities;
 
 import com.project.ResumeBuilder.dtos.ProfileDataDto;
-import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
-import javax.persistence.*;
+import jakarta.persistence.*;  // For JPA annotations
 import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
+import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "user_profiles")
-@TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 public class Profile {
 
     @Id
@@ -29,7 +27,7 @@ public class Profile {
     @Column(name = "objective")
     private String objective;
 
-    @Type(type = "jsonb")
+    @Type(JsonBinaryType.class)
     @Column(name = "profile_data", columnDefinition = "jsonb")
     private ProfileDataDto profileData; // Use ProfileDataDto instead of Map
 

@@ -7,12 +7,12 @@ import com.project.ResumeBuilder.dtos.ProfileResponseDto;
 import com.project.ResumeBuilder.dtos.ProfileUpdateDto;
 import com.project.ResumeBuilder.entities.Profile;
 import com.project.ResumeBuilder.service.ProfileService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/user-profiles")

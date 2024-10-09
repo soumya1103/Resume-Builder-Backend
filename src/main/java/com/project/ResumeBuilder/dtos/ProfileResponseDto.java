@@ -1,7 +1,7 @@
 package com.project.ResumeBuilder.dtos;
 
+import jakarta.validation.Valid;
 
-import javax.validation.Valid;
 import java.time.LocalDateTime;
 
 public class ProfileResponseDto {

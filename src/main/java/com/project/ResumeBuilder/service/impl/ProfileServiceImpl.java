@@ -10,7 +10,7 @@ import com.project.ResumeBuilder.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.validation.Valid;
+
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -22,7 +22,7 @@ public class ProfileServiceImpl implements ProfileService {
     private ProfileRepository profileRepository;
 
     @Override
-    public CommonResponseDto createProfile(@Valid ProfileDto profileDto) {
+    public CommonResponseDto createProfile(ProfileDto profileDto) {
         Profile profile = new Profile();
         profile.setUserId(profileDto.getUserId());
         profile.setProfileName(profileDto.getProfileName());
@@ -38,7 +38,7 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public CommonResponseDto updateProfile(Long id, @Valid ProfileUpdateDto profileDto) {
+    public CommonResponseDto updateProfile(Long id, ProfileUpdateDto profileDto) {
         Profile profile = profileRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Profile not found with id: " + id));
 
