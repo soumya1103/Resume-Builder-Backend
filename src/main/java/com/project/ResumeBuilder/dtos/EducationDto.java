@@ -1,6 +1,7 @@
 package com.project.ResumeBuilder.dtos;
 
-import javax.validation.constraints.NotEmpty;
+
+import jakarta.validation.constraints.NotEmpty;
 
 public class EducationDto {
 

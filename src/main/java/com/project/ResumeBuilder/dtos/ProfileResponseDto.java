@@ -1,10 +1,14 @@
 package com.project.ResumeBuilder.dtos;
 
 
-import javax.validation.Valid;
+
+import jakarta.validation.Valid;
+
 import java.time.LocalDateTime;
 
 public class ProfileResponseDto {
+
+    private Long id;
     private Integer userId;
     private String profileName;
     private String contactNo;
@@ -15,6 +19,14 @@ public class ProfileResponseDto {
 
     @Valid
     private ProfileDataDto profileData;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Integer getUserId() {
         return userId;
@@ -64,11 +76,11 @@ public class ProfileResponseDto {
         this.profileData = profileData;
     }
 
-    public Boolean getDeleted() {
+    public Boolean getIsDeleted() {
         return isDeleted;
     }
 
-    public void setDeleted(Boolean deleted) {
+    public void setIsDeleted(Boolean deleted) {
         isDeleted = deleted;
     }
 }

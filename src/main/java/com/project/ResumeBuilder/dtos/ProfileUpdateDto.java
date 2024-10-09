@@ -1,7 +1,8 @@
 package com.project.ResumeBuilder.dtos;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 
 public class ProfileUpdateDto {
     @NotEmpty(message = "Profile name is required")

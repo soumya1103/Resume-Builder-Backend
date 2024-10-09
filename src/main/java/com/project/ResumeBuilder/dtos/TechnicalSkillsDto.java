@@ -1,7 +1,7 @@
 package com.project.ResumeBuilder.dtos;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 public class TechnicalSkillsDto {

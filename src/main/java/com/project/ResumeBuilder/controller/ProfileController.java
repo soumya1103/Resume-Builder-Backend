@@ -1,18 +1,16 @@
 package com.project.ResumeBuilder.controller;
-
-
 import com.project.ResumeBuilder.dtos.CommonResponseDto;
 import com.project.ResumeBuilder.dtos.ProfileDto;
 import com.project.ResumeBuilder.dtos.ProfileResponseDto;
 import com.project.ResumeBuilder.dtos.ProfileUpdateDto;
-import com.project.ResumeBuilder.entities.Profile;
 import com.project.ResumeBuilder.service.ProfileService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/user-profiles")
@@ -40,10 +38,24 @@ public class ProfileController {
     }
 
     @PutMapping("/{id}/delete")
-    public ResponseEntity<String> deleteProfile(@PathVariable Long id) {
-        profileService.deleteProfile(id);
-        return new ResponseEntity<>("Profile marked as deleted", HttpStatus.OK);
+    public ResponseEntity<CommonResponseDto> deleteProfile(@PathVariable Long id) {
+        CommonResponseDto response=  profileService.deleteProfile(id);
+       // return new ResponseEntity<>("Profile marked as deleted", HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @GetMapping("/user/{userId}")
+    public ProfileResponseDto getProfileByUserId(@PathVariable Long userId) {
+        return profileService.getProfileByUserId(userId);
+    }
+    @GetMapping("/getAllProfile")
+    public ResponseEntity<List<ProfileResponseDto>> getAllProfiles() {
+        List<ProfileResponseDto> profiles = profileService.getAllProfiles();
+        return new ResponseEntity<>(profiles, HttpStatus.OK);
+    }
+
+
+
 }
 
 
