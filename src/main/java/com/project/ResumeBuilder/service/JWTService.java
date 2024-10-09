@@ -1,5 +1,8 @@
 package com.project.ResumeBuilder.service;
 
+import com.project.ResumeBuilder.entities.UserPrincipal;
+import com.project.ResumeBuilder.entities.Users;
+import com.project.ResumeBuilder.enums.UserRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -10,10 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 @Service
@@ -33,8 +33,9 @@ public class JWTService {
         }
     }
 
-    public String generateToken(String username) {
+    public String generateToken(String username, UserRole role) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("role", role.name());
         return Jwts.builder()
                 .claims()
                 .add(claims)
@@ -53,8 +54,13 @@ public class JWTService {
     }
 
     public String extractUserName(String token) {
-        // extract the username from jwt token
         return extractClaim(token, Claims::getSubject);
+    }
+
+    public UserRole extractRole(String token) {
+        Claims claims = extractAllClaims(token);
+        String roleAsString = (String) claims.get("role");
+        return UserRole.valueOf(roleAsString);
     }
 
     private <T> T extractClaim(String token, Function<Claims, T> claimResolver) {
@@ -72,7 +78,10 @@ public class JWTService {
 
     public boolean validateToken(String token, UserDetails userDetails) {
         final String userName = extractUserName(token);
-        return (userName.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        final UserRole tokenRole = extractRole(token);
+        Users user = ((UserPrincipal) userDetails).getUser();
+        UserRole userRole = user.getRole();
+        return (userName.equals(userDetails.getUsername()) && tokenRole.equals(userRole) && !isTokenExpired(token));
     }
 
     private boolean isTokenExpired(String token) {

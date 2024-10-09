@@ -3,7 +3,9 @@ package com.project.ResumeBuilder.service;
 import com.project.ResumeBuilder.constants.ConstantMessage;
 import com.project.ResumeBuilder.dtoconvertor.DtoConvertor;
 import com.project.ResumeBuilder.entities.Users;
+import com.project.ResumeBuilder.enums.UserRole;
 import com.project.ResumeBuilder.exception.ResourceAlreadyExistsException;
+import com.project.ResumeBuilder.exception.ResourceNotFoundException;
 import com.project.ResumeBuilder.indto.LoginRequest;
 import com.project.ResumeBuilder.indto.RegisterRequest;
 import com.project.ResumeBuilder.repository.UserRepository;
@@ -13,6 +15,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UsersService {
@@ -48,9 +54,25 @@ public class UsersService {
     public String login(LoginRequest loginRequest) {
         Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
         if (authentication.isAuthenticated()) {
-            return jwtService.generateToken(loginRequest.getEmail());
+            Users user = userRepository.findByEmail(loginRequest.getEmail());
+            UserRole role = user.getRole();
+            return jwtService.generateToken(loginRequest.getEmail(), role);
         } else {
             return ConstantMessage.INVALID_CREDENTIALS;
+        }
+    }
+
+    public Users findById(long userId) {
+        try {
+            Optional<Users> user = userRepository.findById(userId);
+            if (user.isPresent()) {
+                return user.get();
+            }
+            throw new ResourceNotFoundException(ConstantMessage.USER_NOT_FOUND);
+        } catch (ResourceNotFoundException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw new RuntimeException(ConstantMessage.UNEXPECTED_ERROR_OCCURRED);
         }
     }
 }

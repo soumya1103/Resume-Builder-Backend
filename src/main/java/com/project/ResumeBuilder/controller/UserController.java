@@ -1,6 +1,7 @@
 package com.project.ResumeBuilder.controller;
 
 
+import com.project.ResumeBuilder.entities.Users;
 import com.project.ResumeBuilder.indto.LoginRequest;
 import com.project.ResumeBuilder.indto.RegisterRequest;
 import com.project.ResumeBuilder.outdto.SuccessResponse;
@@ -24,10 +25,16 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(successResponse);
     }
 
-    @PostMapping
+    @PostMapping("/login")
     public ResponseEntity<SuccessResponse> login(@RequestBody LoginRequest loginRequest) {
         String response =  usersService.login(loginRequest);
         SuccessResponse successResponse = new SuccessResponse(response);
         return ResponseEntity.status(HttpStatus.OK).body(successResponse);
+    }
+
+    @GetMapping("/id")
+    public ResponseEntity<Users> findById(@RequestParam long userId) {
+        Users user = usersService.findById(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 }
