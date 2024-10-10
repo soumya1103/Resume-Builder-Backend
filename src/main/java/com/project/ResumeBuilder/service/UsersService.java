@@ -5,10 +5,12 @@ import com.project.ResumeBuilder.dtoconvertor.DtoConvertor;
 import com.project.ResumeBuilder.entities.Users;
 import com.project.ResumeBuilder.enums.UserRole;
 import com.project.ResumeBuilder.exception.ResourceConflictException;
+import com.project.ResumeBuilder.exception.ResourceInvalidException;
 import com.project.ResumeBuilder.exception.ResourceNotFoundException;
 import com.project.ResumeBuilder.indto.LoginRequest;
 import com.project.ResumeBuilder.indto.RegisterRequest;
 import com.project.ResumeBuilder.indto.UpdateUserRequest;
+import com.project.ResumeBuilder.outdto.LoginResponse;
 import com.project.ResumeBuilder.outdto.UserResponse;
 import com.project.ResumeBuilder.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,14 +56,20 @@ public class UsersService {
         }
     }
 
-    public String login(LoginRequest loginRequest) {
-        Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
-        if (authentication.isAuthenticated()) {
-            Users user = userRepository.findByEmail(loginRequest.getEmail());
-            UserRole role = user.getRole();
-            return jwtService.generateToken(loginRequest.getEmail(), role);
-        } else {
-            return ConstantMessage.INVALID_CREDENTIALS;
+    public LoginResponse login(LoginRequest loginRequest) {
+
+        try {
+            Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+            if (authentication.isAuthenticated()) {
+                Users user = userRepository.findByEmail(loginRequest.getEmail());
+                UserRole role = user.getRole();
+                LoginResponse loginResponse = DtoConvertor.convertToLoginResponse(user);
+                loginResponse.setToken(jwtService.generateToken(loginRequest.getEmail(), role));
+                return loginResponse;
+            }
+            throw new ResourceInvalidException("Invalid Credentials");
+        } catch (ResourceInvalidException ex) {
+            throw ex;
         }
     }
 

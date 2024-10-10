@@ -5,6 +5,7 @@ import com.project.ResumeBuilder.entities.Users;
 import com.project.ResumeBuilder.indto.LoginRequest;
 import com.project.ResumeBuilder.indto.RegisterRequest;
 import com.project.ResumeBuilder.indto.UpdateUserRequest;
+import com.project.ResumeBuilder.outdto.LoginResponse;
 import com.project.ResumeBuilder.outdto.SuccessResponse;
 import com.project.ResumeBuilder.outdto.UserResponse;
 import com.project.ResumeBuilder.service.UsersService;
@@ -30,10 +31,9 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<SuccessResponse> login(@RequestBody LoginRequest loginRequest) {
-        String response =  usersService.login(loginRequest);
-        SuccessResponse successResponse = new SuccessResponse(response);
-        return ResponseEntity.status(HttpStatus.OK).body(successResponse);
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+        LoginResponse loginResponse =  usersService.login(loginRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(loginResponse);
     }
 
     @GetMapping("/{id}")
