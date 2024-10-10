@@ -2,7 +2,7 @@ package com.project.ResumeBuilder.enums;
 
 public enum UserRole {
 
-    EMPLOYEE,
+    ROLE_EMPLOYEE,
 
-    HR
+    ROLE_HR
 }

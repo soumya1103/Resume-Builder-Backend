@@ -36,9 +36,9 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(successResponse);
     }
 
-    @GetMapping("/id")
-    public ResponseEntity<Users> findById(@RequestParam long userId) {
-        Users user = usersService.findById(userId);
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponse> findById(@PathVariable("id") long userId) {
+        UserResponse user = usersService.findById(userId);
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
@@ -49,8 +49,9 @@ public class UserController {
     }
 
     @PutMapping("/update/{userId}")
-    public ResponseEntity<String> updateUser(@PathVariable("userId") long usedId, @RequestBody UpdateUserRequest updateUserRequest) {
+    public ResponseEntity<SuccessResponse> updateUser(@PathVariable("userId") long usedId, @RequestBody UpdateUserRequest updateUserRequest) {
         String response = usersService.updateUser(usedId, updateUserRequest);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        SuccessResponse successResponse = new SuccessResponse(response);
+        return ResponseEntity.status(HttpStatus.OK).body(successResponse);
     }
 }

@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -64,11 +65,13 @@ public class UsersService {
         }
     }
 
-    public Users findById(long userId) {
+    public UserResponse findById(long userId) {
         try {
             Optional<Users> user = userRepository.findById(userId);
             if (user.isPresent()) {
-                return user.get();
+                Users users = user.get();
+                UserResponse userResponse = DtoConvertor.convertToResponse(users);
+                return userResponse;
             }
             throw new ResourceNotFoundException(ConstantMessage.USER_NOT_FOUND);
         } catch (ResourceNotFoundException ex) {
@@ -100,11 +103,13 @@ public class UsersService {
     public String updateUser(long userId, UpdateUserRequest updateUserRequest) {
         try {
             Optional<Users> user = userRepository.findById(userId);
-            if (userRepository.findByEmail(updateUserRequest.getEmail()) != null) {
-                throw new ResourceConflictException(ConstantMessage.USER_ALREADY_EXISTS);
-            }
             if(user.isPresent()) {
                 Users updatedUser = user.get();
+                if (!Objects.equals(updatedUser.getEmail(), updateUserRequest.getEmail())) {
+                    if (userRepository.findByEmail(updateUserRequest.getEmail()) != null) {
+                        throw new ResourceConflictException(ConstantMessage.USER_ALREADY_EXISTS);
+                    }
+                }
                 updatedUser.setName(updateUserRequest.getName());
                 updatedUser.setEmail(updateUserRequest.getEmail());
                 userRepository.save(updatedUser);
