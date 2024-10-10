@@ -40,14 +40,13 @@ public class ProfileController {
     @PutMapping("/{id}/delete")
     public ResponseEntity<CommonResponseDto> deleteProfile(@PathVariable Long id) {
         CommonResponseDto response=  profileService.deleteProfile(id);
-       // return new ResponseEntity<>("Profile marked as deleted", HttpStatus.OK);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
     @GetMapping("/user/{userId}")
-    public ProfileResponseDto getProfileByUserId(@PathVariable Long userId) {
-        return profileService.getProfileByUserId(userId);
-    }
+   public ResponseEntity<List<ProfileResponseDto>> getProfilesByUserId(@PathVariable Long userId) {
+       List<ProfileResponseDto> profileResponse = profileService.getProfilesByUserId(userId);
+       return new ResponseEntity<>(profileResponse, HttpStatus.OK);
+   }
     @GetMapping("/getAllProfile")
     public ResponseEntity<List<ProfileResponseDto>> getAllProfiles() {
         List<ProfileResponseDto> profiles = profileService.getAllProfiles();

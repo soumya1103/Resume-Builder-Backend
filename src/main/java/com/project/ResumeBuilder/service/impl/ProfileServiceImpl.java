@@ -81,12 +81,18 @@ public class ProfileServiceImpl implements ProfileService {
         return message;
 
     }
+    public List<ProfileResponseDto> getProfilesByUserId(Long userId) {
+      List<Profile> profiles = profileRepository.findAllByUserId(userId);
 
-    public ProfileResponseDto getProfileByUserId(Long userId) {
-        Optional<Profile> optionalProfile = profileRepository.findByUserId(userId);
-        Profile profile = optionalProfile.orElseThrow(() -> new NotFoundException(ProfileConstants.USER_NOT_FOUND +  userId));
-        return convertToResponseDto(profile);
-    }
+      if (profiles.isEmpty()) {
+          throw new NotFoundException(ProfileConstants.USER_NOT_FOUND + userId);
+      }
+
+      return profiles.stream()
+              .map(this::convertToResponseDto)
+              .collect(Collectors.toList());
+  }
+
 
     public List<ProfileResponseDto> getAllProfiles() {
         List<Profile> profiles = profileRepository.findAll();

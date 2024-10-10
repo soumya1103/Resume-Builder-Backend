@@ -15,7 +15,7 @@ public interface ProfileService {
     ProfileResponseDto getProfileById(Long id);
     CommonResponseDto deleteProfile(Long profileId);
     List<ProfileResponseDto> getAllProfiles();
-    ProfileResponseDto getProfileByUserId(Long id);
+    List<ProfileResponseDto> getProfilesByUserId(Long userId);
 
 
 }
