@@ -4,12 +4,16 @@ package com.project.ResumeBuilder.controller;
 import com.project.ResumeBuilder.entities.Users;
 import com.project.ResumeBuilder.indto.LoginRequest;
 import com.project.ResumeBuilder.indto.RegisterRequest;
+import com.project.ResumeBuilder.indto.UpdateUserRequest;
 import com.project.ResumeBuilder.outdto.SuccessResponse;
+import com.project.ResumeBuilder.outdto.UserResponse;
 import com.project.ResumeBuilder.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -36,5 +40,17 @@ public class UserController {
     public ResponseEntity<Users> findById(@RequestParam long userId) {
         Users user = usersService.findById(userId);
         return ResponseEntity.status(HttpStatus.OK).body(user);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<UserResponse>> getAllUser() {
+        List<UserResponse> userResponses = usersService.findAll();
+        return ResponseEntity.status(HttpStatus.OK).body(userResponses);
+    }
+
+    @PutMapping("/update/{userId}")
+    public ResponseEntity<String> updateUser(@PathVariable("userId") long usedId, @RequestBody UpdateUserRequest updateUserRequest) {
+        String response = usersService.updateUser(usedId, updateUserRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

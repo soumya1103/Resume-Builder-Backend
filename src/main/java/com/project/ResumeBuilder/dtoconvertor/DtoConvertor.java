@@ -8,8 +8,9 @@ public class DtoConvertor{
     public static UserResponse convertToResponse(Users users) {
         UserResponse userResponse = new UserResponse();
         userResponse.setUserId(users.getUserId());
-        userResponse.setUserEmail(users.getEmail());
-        userResponse.setUserRole(users.getRole());
+        userResponse.setName(users.getName());
+        userResponse.setEmail(users.getEmail());
+        userResponse.setRole(users.getRole());
         return userResponse;
     }
     public static Users convertToEntity(RegisterRequest registerRequest) {
