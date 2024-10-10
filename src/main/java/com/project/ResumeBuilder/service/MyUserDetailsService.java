@@ -1,5 +1,6 @@
 package com.project.ResumeBuilder.service;
 
+import com.project.ResumeBuilder.constants.ConstantMessage;
 import com.project.ResumeBuilder.entities.UserPrincipal;
 import com.project.ResumeBuilder.entities.Users;
 import com.project.ResumeBuilder.repository.UserRepository;
@@ -20,7 +21,7 @@ public class MyUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Users user = userRepo.findByEmail(username);
         if (user == null) {
-            throw new UsernameNotFoundException("user not found");
+            throw new UsernameNotFoundException(ConstantMessage.USER_NOT_FOUND);
         }
 
         return new UserPrincipal(user);

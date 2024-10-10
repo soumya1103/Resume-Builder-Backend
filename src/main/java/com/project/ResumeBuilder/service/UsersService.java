@@ -4,7 +4,6 @@ import com.project.ResumeBuilder.constants.ConstantMessage;
 import com.project.ResumeBuilder.dtoconvertor.DtoConvertor;
 import com.project.ResumeBuilder.entities.Users;
 import com.project.ResumeBuilder.enums.UserRole;
-import com.project.ResumeBuilder.exception.ResourceAlreadyExistsException;
 import com.project.ResumeBuilder.exception.ResourceConflictException;
 import com.project.ResumeBuilder.exception.ResourceNotFoundException;
 import com.project.ResumeBuilder.indto.LoginRequest;
@@ -41,13 +40,13 @@ public class UsersService {
     public String register(RegisterRequest registerRequest) {
         try {
             if (userRepository.findByEmail(registerRequest.getEmail()) != null) {
-                throw new ResourceAlreadyExistsException(ConstantMessage.USER_ALREADY_EXISTS);
+                throw new ResourceConflictException(ConstantMessage.USER_ALREADY_EXISTS);
             }
             registerRequest.setPassword(encoder.encode(registerRequest.getPassword()));
             Users user = DtoConvertor.convertToEntity(registerRequest);
             userRepository.save(user);
             return ConstantMessage.USER_REGISTERED_SUCCESSFULLY;
-        } catch (ResourceAlreadyExistsException ex) {
+        } catch (ResourceConflictException ex) {
             throw ex;
         } catch (Exception ex) {
             throw new RuntimeException(ConstantMessage.UNEXPECTED_ERROR_OCCURRED);
