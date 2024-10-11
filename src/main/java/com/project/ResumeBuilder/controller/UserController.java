@@ -8,6 +8,7 @@ import com.project.ResumeBuilder.outdto.LoginOutDTO;
 import com.project.ResumeBuilder.outdto.SuccessOutDTO;
 import com.project.ResumeBuilder.outdto.UserOutDTO;
 import com.project.ResumeBuilder.service.UsersService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,14 +24,14 @@ public class UserController {
     private UsersService usersService;
 
     @PostMapping("/register")
-    public ResponseEntity<SuccessOutDTO> registerUser(@RequestBody RegisterInDTO registerInDTO) {
+    public ResponseEntity<SuccessOutDTO> registerUser(@Valid  @RequestBody RegisterInDTO registerInDTO) {
         String response =  usersService.register(registerInDTO);
         SuccessOutDTO successOutDTO = new SuccessOutDTO(response);
         return ResponseEntity.status(HttpStatus.OK).body(successOutDTO);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginOutDTO> login(@RequestBody LoginInDTO loginInDTO) {
+    public ResponseEntity<LoginOutDTO> login(@Valid @RequestBody LoginInDTO loginInDTO) {
         LoginOutDTO loginOutDTO =  usersService.login(loginInDTO);
         return ResponseEntity.status(HttpStatus.OK).body(loginOutDTO);
     }
@@ -48,7 +49,7 @@ public class UserController {
     }
 
     @PutMapping("/update/{userId}")
-    public ResponseEntity<SuccessOutDTO> updateUser(@PathVariable("userId") long usedId, @RequestBody UpdateUserInDTO updateUserInDTO) {
+    public ResponseEntity<SuccessOutDTO> updateUser(@PathVariable("userId") long usedId, @Valid @RequestBody UpdateUserInDTO updateUserInDTO) {
         String response = usersService.updateUser(usedId, updateUserInDTO);
         SuccessOutDTO successOutDTO = new SuccessOutDTO(response);
         return ResponseEntity.status(HttpStatus.OK).body(successOutDTO);
