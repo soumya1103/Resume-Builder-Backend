@@ -1,13 +1,12 @@
 package com.project.ResumeBuilder.controller;
 
 
-import com.project.ResumeBuilder.entities.Users;
-import com.project.ResumeBuilder.indto.LoginRequest;
-import com.project.ResumeBuilder.indto.RegisterRequest;
-import com.project.ResumeBuilder.indto.UpdateUserRequest;
-import com.project.ResumeBuilder.outdto.LoginResponse;
-import com.project.ResumeBuilder.outdto.SuccessResponse;
-import com.project.ResumeBuilder.outdto.UserResponse;
+import com.project.ResumeBuilder.indto.LoginInDTO;
+import com.project.ResumeBuilder.indto.RegisterInDTO;
+import com.project.ResumeBuilder.indto.UpdateUserInDTO;
+import com.project.ResumeBuilder.outdto.LoginOutDTO;
+import com.project.ResumeBuilder.outdto.SuccessOutDTO;
+import com.project.ResumeBuilder.outdto.UserOutDTO;
 import com.project.ResumeBuilder.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,34 +23,34 @@ public class UserController {
     private UsersService usersService;
 
     @PostMapping("/register")
-    public ResponseEntity<SuccessResponse> registerUser(@RequestBody RegisterRequest registerRequest) {
-        String response =  usersService.register(registerRequest);
-        SuccessResponse successResponse = new SuccessResponse(response);
-        return ResponseEntity.status(HttpStatus.OK).body(successResponse);
+    public ResponseEntity<SuccessOutDTO> registerUser(@RequestBody RegisterInDTO registerInDTO) {
+        String response =  usersService.register(registerInDTO);
+        SuccessOutDTO successOutDTO = new SuccessOutDTO(response);
+        return ResponseEntity.status(HttpStatus.OK).body(successOutDTO);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
-        LoginResponse loginResponse =  usersService.login(loginRequest);
-        return ResponseEntity.status(HttpStatus.OK).body(loginResponse);
+    public ResponseEntity<LoginOutDTO> login(@RequestBody LoginInDTO loginInDTO) {
+        LoginOutDTO loginOutDTO =  usersService.login(loginInDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(loginOutDTO);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponse> findById(@PathVariable("id") long userId) {
-        UserResponse user = usersService.findById(userId);
+    public ResponseEntity<UserOutDTO> findById(@PathVariable("id") long userId) {
+        UserOutDTO user = usersService.findById(userId);
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<UserResponse>> getAllUser() {
-        List<UserResponse> userResponses = usersService.findAll();
-        return ResponseEntity.status(HttpStatus.OK).body(userResponses);
+    public ResponseEntity<List<UserOutDTO>> getAllUser() {
+        List<UserOutDTO> userRespons = usersService.findAll();
+        return ResponseEntity.status(HttpStatus.OK).body(userRespons);
     }
 
     @PutMapping("/update/{userId}")
-    public ResponseEntity<SuccessResponse> updateUser(@PathVariable("userId") long usedId, @RequestBody UpdateUserRequest updateUserRequest) {
-        String response = usersService.updateUser(usedId, updateUserRequest);
-        SuccessResponse successResponse = new SuccessResponse(response);
-        return ResponseEntity.status(HttpStatus.OK).body(successResponse);
+    public ResponseEntity<SuccessOutDTO> updateUser(@PathVariable("userId") long usedId, @RequestBody UpdateUserInDTO updateUserInDTO) {
+        String response = usersService.updateUser(usedId, updateUserInDTO);
+        SuccessOutDTO successOutDTO = new SuccessOutDTO(response);
+        return ResponseEntity.status(HttpStatus.OK).body(successOutDTO);
     }
 }

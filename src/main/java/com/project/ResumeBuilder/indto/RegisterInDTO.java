@@ -1,6 +1,5 @@
 package com.project.ResumeBuilder.indto;
 
-import com.project.ResumeBuilder.enums.UserRole;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,7 +10,7 @@ import static com.project.ResumeBuilder.constants.ConstantMessage.MIN_PASSWORD_L
 
 @Data
 @AllArgsConstructor
-public class RegisterRequest {
+public class RegisterInDTO {
 
     @Email
     @NotBlank(message = "Valid Email not found")
@@ -33,13 +32,13 @@ public class RegisterRequest {
     private String password;
 
     @NotNull(message = "Role is mandatory")
-    private UserRole role;
+    private String role;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RegisterRequest that = (RegisterRequest) o;
+        RegisterInDTO that = (RegisterInDTO) o;
         return Objects.equals(email, that.email) && Objects.equals(name, that.name) && Objects.equals(password, that.password) && role == that.role;
     }
 

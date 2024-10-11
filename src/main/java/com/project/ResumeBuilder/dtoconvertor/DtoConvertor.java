@@ -1,35 +1,34 @@
 package com.project.ResumeBuilder.dtoconvertor;
 
 import com.project.ResumeBuilder.entities.Users;
-import com.project.ResumeBuilder.indto.RegisterRequest;
-import com.project.ResumeBuilder.outdto.LoginResponse;
-import com.project.ResumeBuilder.outdto.UserResponse;
+import com.project.ResumeBuilder.indto.RegisterInDTO;
+import com.project.ResumeBuilder.outdto.LoginOutDTO;
+import com.project.ResumeBuilder.outdto.UserOutDTO;
 
 public class DtoConvertor{
 
-    public static LoginResponse convertToLoginResponse(Users users) {
-        LoginResponse loginResponse = new LoginResponse();
-        loginResponse.setUserId(users.getUserId());
-        loginResponse.setEmail(users.getEmail());
-        loginResponse.setName(users.getName());
-        loginResponse.setRole(users.getRole());
-        return loginResponse;
+    public static LoginOutDTO convertToLoginResponse(Users users) {
+        LoginOutDTO loginOutDTO = new LoginOutDTO();
+        loginOutDTO.setUserId(users.getUserId());
+        loginOutDTO.setEmail(users.getEmail());
+        loginOutDTO.setName(users.getName());
+        loginOutDTO.setRole(users.getRole());
+        return loginOutDTO;
     }
 
-    public static UserResponse convertToResponse(Users users) {
-        UserResponse userResponse = new UserResponse();
-        userResponse.setUserId(users.getUserId());
-        userResponse.setName(users.getName());
-        userResponse.setEmail(users.getEmail());
-        userResponse.setRole(users.getRole());
-        return userResponse;
+    public static UserOutDTO convertToResponse(Users users) {
+        UserOutDTO userOutDTO = new UserOutDTO();
+        userOutDTO.setUserId(users.getUserId());
+        userOutDTO.setName(users.getName());
+        userOutDTO.setEmail(users.getEmail());
+        userOutDTO.setRole(users.getRole());
+        return userOutDTO;
     }
-    public static Users convertToEntity(RegisterRequest registerRequest) {
+    public static Users convertToEntity(RegisterInDTO registerInDTO) {
         Users users = new Users();
-        users.setEmail(registerRequest.getEmail());
-        users.setName(registerRequest.getName());
-        users.setPassword(registerRequest.getPassword());
-        users.setRole(registerRequest.getRole());
+        users.setEmail(registerInDTO.getEmail());
+        users.setName(registerInDTO.getName());
+        users.setPassword(registerInDTO.getPassword());
         return users;
     }
 }

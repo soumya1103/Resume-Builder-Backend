@@ -18,4 +18,6 @@ public class ConstantMessage {
     public static final String FAILED_TO_UPDATE_USER = "Failed to update user";
 
     public static final int MIN_PASSWORD_LENGTH = 8;
+
+    public static final String VALID_ROLE_REQUIRED = "Valid role required";
 }

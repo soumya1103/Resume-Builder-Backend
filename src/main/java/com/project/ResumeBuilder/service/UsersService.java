@@ -7,11 +7,11 @@ import com.project.ResumeBuilder.enums.UserRole;
 import com.project.ResumeBuilder.exception.ResourceConflictException;
 import com.project.ResumeBuilder.exception.ResourceInvalidException;
 import com.project.ResumeBuilder.exception.ResourceNotFoundException;
-import com.project.ResumeBuilder.indto.LoginRequest;
-import com.project.ResumeBuilder.indto.RegisterRequest;
-import com.project.ResumeBuilder.indto.UpdateUserRequest;
-import com.project.ResumeBuilder.outdto.LoginResponse;
-import com.project.ResumeBuilder.outdto.UserResponse;
+import com.project.ResumeBuilder.indto.LoginInDTO;
+import com.project.ResumeBuilder.indto.RegisterInDTO;
+import com.project.ResumeBuilder.indto.UpdateUserInDTO;
+import com.project.ResumeBuilder.outdto.LoginOutDTO;
+import com.project.ResumeBuilder.outdto.UserOutDTO;
 import com.project.ResumeBuilder.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,10 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UsersService {
@@ -40,32 +37,39 @@ public class UsersService {
 
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
-    public String register(RegisterRequest registerRequest) {
+    public String register(RegisterInDTO registerInDTO) {
         try {
-            if (userRepository.findByEmail(registerRequest.getEmail()) != null) {
+            if (userRepository.findByEmail(registerInDTO.getEmail()) != null) {
                 throw new ResourceConflictException(ConstantMessage.USER_ALREADY_EXISTS);
             }
-            registerRequest.setPassword(encoder.encode(registerRequest.getPassword()));
-            Users user = DtoConvertor.convertToEntity(registerRequest);
+            UserRole role = UserRole.valueOf(registerInDTO.getRole());
+            registerInDTO.setPassword(encoder.encode(registerInDTO.getPassword()));
+            Users user = DtoConvertor.convertToEntity(registerInDTO);
+            user.setRole(role);
             userRepository.save(user);
             return ConstantMessage.USER_REGISTERED_SUCCESSFULLY;
-        } catch (ResourceConflictException ex) {
+        } catch (IllegalArgumentException e) {
+            throw new ResourceInvalidException("Invalid role. Allowed values: ROLE_HR, ROLE_EMPLOYEE");
+        } catch (ResourceConflictException | ResourceInvalidException ex) {
             throw ex;
         } catch (Exception ex) {
             throw new RuntimeException(ConstantMessage.UNEXPECTED_ERROR_OCCURRED);
         }
     }
 
-    public LoginResponse login(LoginRequest loginRequest) {
+    public LoginOutDTO login(LoginInDTO loginInDTO) {
 
         try {
-            Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+            byte[] decodedBytes = Base64.getDecoder().decode(loginInDTO.getPassword());
+            String decodedPassword = new String(decodedBytes);
+            loginInDTO.setPassword(decodedPassword);
+            Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(loginInDTO.getEmail(), loginInDTO.getPassword()));
             if (authentication.isAuthenticated()) {
-                Users user = userRepository.findByEmail(loginRequest.getEmail());
+                Users user = userRepository.findByEmail(loginInDTO.getEmail());
                 UserRole role = user.getRole();
-                LoginResponse loginResponse = DtoConvertor.convertToLoginResponse(user);
-                loginResponse.setToken(jwtService.generateToken(loginRequest.getEmail(), role));
-                return loginResponse;
+                LoginOutDTO loginOutDTO = DtoConvertor.convertToLoginResponse(user);
+                loginOutDTO.setToken(jwtService.generateToken(loginInDTO.getEmail(), role));
+                return loginOutDTO;
             }
             throw new ResourceInvalidException("Invalid Credentials");
         } catch (ResourceInvalidException ex) {
@@ -73,13 +77,13 @@ public class UsersService {
         }
     }
 
-    public UserResponse findById(long userId) {
+    public UserOutDTO findById(long userId) {
         try {
             Optional<Users> user = userRepository.findById(userId);
             if (user.isPresent()) {
                 Users users = user.get();
-                UserResponse userResponse = DtoConvertor.convertToResponse(users);
-                return userResponse;
+                UserOutDTO userOutDTO = DtoConvertor.convertToResponse(users);
+                return userOutDTO;
             }
             throw new ResourceNotFoundException(ConstantMessage.USER_NOT_FOUND);
         } catch (ResourceNotFoundException ex) {
@@ -89,18 +93,18 @@ public class UsersService {
         }
     }
 
-    public List<UserResponse> findAll() {
+    public List<UserOutDTO> findAll() {
         try {
             List<Users> users = userRepository.findAll();
-            List<UserResponse> userResponses = new ArrayList<>();
+            List<UserOutDTO> userOutDTOS = new ArrayList<>();
             for (Users user : users) {
-                UserResponse userResponse = DtoConvertor.convertToResponse(user);
-                userResponses.add(userResponse);
+                UserOutDTO userOutDTO = DtoConvertor.convertToResponse(user);
+                userOutDTOS.add(userOutDTO);
             }
             if(users.isEmpty()) {
                 throw new ResourceNotFoundException(ConstantMessage.USER_NOT_FOUND);
             }
-            return userResponses;
+            return userOutDTOS;
         } catch (ResourceNotFoundException ex) {
             throw ex;
         } catch (Exception ex) {
@@ -108,18 +112,18 @@ public class UsersService {
         }
     }
 
-    public String updateUser(long userId, UpdateUserRequest updateUserRequest) {
+    public String updateUser(long userId, UpdateUserInDTO updateUserInDTO) {
         try {
             Optional<Users> user = userRepository.findById(userId);
             if(user.isPresent()) {
                 Users updatedUser = user.get();
-                if (!Objects.equals(updatedUser.getEmail(), updateUserRequest.getEmail())) {
-                    if (userRepository.findByEmail(updateUserRequest.getEmail()) != null) {
+                if (!Objects.equals(updatedUser.getEmail(), updateUserInDTO.getEmail())) {
+                    if (userRepository.findByEmail(updateUserInDTO.getEmail()) != null) {
                         throw new ResourceConflictException(ConstantMessage.USER_ALREADY_EXISTS);
                     }
                 }
-                updatedUser.setName(updateUserRequest.getName());
-                updatedUser.setEmail(updateUserRequest.getEmail());
+                updatedUser.setName(updateUserInDTO.getName());
+                updatedUser.setEmail(updateUserInDTO.getEmail());
                 userRepository.save(updatedUser);
                 return ConstantMessage.USER_UPDATED_SUCCESSFULLY;
             }

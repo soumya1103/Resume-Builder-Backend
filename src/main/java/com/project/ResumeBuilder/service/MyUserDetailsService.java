@@ -23,7 +23,6 @@ public class MyUserDetailsService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException(ConstantMessage.USER_NOT_FOUND);
         }
-
         return new UserPrincipal(user);
     }
 }

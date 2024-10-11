@@ -4,7 +4,7 @@ import com.project.ResumeBuilder.enums.UserRole;
 import lombok.Data;
 
 @Data
-public class LoginResponse {
+public class LoginOutDTO {
 
     private Long userId;
     private String email;
