@@ -41,6 +41,7 @@ public class Profile {
     @Column
     private LocalDateTime deletedAt;
 
+
     public Long getId() {
         return id;
     }

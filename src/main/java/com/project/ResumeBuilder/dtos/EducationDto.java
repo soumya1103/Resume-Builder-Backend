@@ -37,5 +37,14 @@ public class EducationDto {
     public void setDuration(String duration) {
         this.duration = duration;
     }
+
+    @Override
+    public String toString() {
+        return "EducationDto{" +
+                "course='" + course + '\'' +
+                ", collegeName='" + collegeName + '\'' +
+                ", duration='" + duration + '\'' +
+                '}';
+    }
 }
 

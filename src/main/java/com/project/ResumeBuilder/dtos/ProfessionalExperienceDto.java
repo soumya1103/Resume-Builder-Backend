@@ -82,5 +82,18 @@ public class ProfessionalExperienceDto {
     public void setDetails(List<String> details) {
         this.details = details;
     }
+
+    @Override
+    public String toString() {
+        return "ProfessionalExperienceDto{" +
+                "jobTitle='" + jobTitle + '\'' +
+                ", companyName='" + companyName + '\'' +
+                ", projectName='" + projectName + '\'' +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", techStack=" + techStack +
+                ", details=" + details +
+                '}';
+    }
 }
 
