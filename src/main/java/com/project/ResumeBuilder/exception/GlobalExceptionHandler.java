@@ -6,7 +6,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
+
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import java.util.HashMap;
@@ -37,32 +37,32 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException ex) {
-        ErrorResponse response = new ErrorResponse(
-                ex.getMessage(),
-                HttpStatus.NOT_FOUND
-        );
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-    }
-     public static class ErrorResponse {
-        private final int status;
-
-        private final String message;
-
-        public ErrorResponse1(final int status, final String message) {
-            this.status = status;
-            this.message = message;
-        }
-
-        public int getStatus() {
-            return status;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-    }
+//    @ExceptionHandler(NotFoundException.class)
+//    public ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException ex) {
+//        ErrorResponse response = new ErrorResponse(
+//                ex.getMessage(),
+//                HttpStatus.NOT_FOUND
+//        );
+//        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+//    }
+//     public static class ErrorResponse {
+//        private final int status;
+//
+//        private final String message;
+//
+//        public ErrorResponse1(final int status, final String message) {
+//            this.status = status;
+//            this.message = message;
+//        }
+//
+//        public int getStatus() {
+//            return status;
+//        }
+//
+//        public String getMessage() {
+//            return message;
+//        }
+//    }
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     @ResponseBody
