@@ -1,24 +1,34 @@
 package com.project.ResumeBuilder.dtoconvertor;
 
-import com.project.ResumeBuilder.indto.UserRequest;
-import com.project.ResumeBuilder.outdto.UserResponse;
-import com.project.ResumeBuilder.entities.User;
+import com.project.ResumeBuilder.entities.Users;
+import com.project.ResumeBuilder.indto.RegisterInDTO;
+import com.project.ResumeBuilder.outdto.LoginOutDTO;
+import com.project.ResumeBuilder.outdto.UserOutDTO;
 
 public class DtoConvertor{
-    public static UserResponse convertToResponse(User user) {
-        UserResponse userResponse = new UserResponse();
-        userResponse.setUserId(user.getUserId());
-        userResponse.setUserEmail(user.getUserEmail());
-        userResponse.setUserName(user.getUserName());
-        userResponse.setUserRole(user.getUserRole());
-        return userResponse;
+
+    public static LoginOutDTO convertToLoginResponse(Users users) {
+        LoginOutDTO loginOutDTO = new LoginOutDTO();
+        loginOutDTO.setUserId(users.getUserId());
+        loginOutDTO.setEmail(users.getEmail());
+        loginOutDTO.setName(users.getName());
+        loginOutDTO.setRole(users.getRole());
+        return loginOutDTO;
     }
-    public static User convertToEntity(UserRequest userRequest) {
-        User user = new User();
-        user.setUserEmail(userRequest.getUserEmail());
-        user.setUserName(userRequest.getUserName());
-        user.setUserPassword(userRequest.getUserPassword());
-        user.setUserRole(userRequest.getUserRole());
-        return user;
+
+    public static UserOutDTO convertToResponse(Users users) {
+        UserOutDTO userOutDTO = new UserOutDTO();
+        userOutDTO.setUserId(users.getUserId());
+        userOutDTO.setName(users.getName());
+        userOutDTO.setEmail(users.getEmail());
+        userOutDTO.setRole(users.getRole());
+        return userOutDTO;
+    }
+    public static Users convertToEntity(RegisterInDTO registerInDTO) {
+        Users users = new Users();
+        users.setEmail(registerInDTO.getEmail());
+        users.setName(registerInDTO.getName());
+        users.setPassword(registerInDTO.getPassword());
+        return users;
     }
 }
