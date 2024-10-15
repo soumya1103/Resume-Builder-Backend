@@ -57,4 +57,3 @@ public class JwtFilter extends OncePerRequestFilter {
         return new AntPathMatcher().match("/users/login", path);
     }
 }
-
