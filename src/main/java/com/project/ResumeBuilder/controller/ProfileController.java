@@ -27,7 +27,7 @@ public class ProfileController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<CommonResponseDto> updateProfile(@PathVariable Long id, @RequestBody @Valid ProfileUpdateDto profileUpdateDto) {
+    public ResponseEntity<CommonResponseDto> updateProfile(@PathVariable Long id, @RequestBody ProfileUpdateDto profileUpdateDto) {
         CommonResponseDto updatedProfile = profileService.updateProfile(id, profileUpdateDto);
         return new ResponseEntity<>(updatedProfile, HttpStatus.OK);
     }
