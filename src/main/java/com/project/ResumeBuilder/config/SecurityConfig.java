@@ -32,17 +32,19 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        return http.csrf(customizer -> customizer.disable()).
-                authorizeHttpRequests(request -> request
+        return http
+                .csrf(customizer -> customizer.disable())
+                .cors(Customizer.withDefaults()) // Enable CORS
+                .authorizeHttpRequests(request -> request
                         .requestMatchers("/users/login", "/users/register").permitAll()
                         .requestMatchers("/api/user-profiles/getAllProfile").hasAuthority("ROLE_HR")
                         .requestMatchers("/api/user-profiles/{id}/delete").hasAuthority("ROLE_HR")
                         .requestMatchers("/api/user-profiles/create").hasAnyAuthority("ROLE_HR", "ROLE_EMPLOYEE")
                         .requestMatchers("/api/user-profiles/update/{id}").hasAnyAuthority("ROLE_HR", "ROLE_EMPLOYEE")
                         .requestMatchers("/api/user-profiles/{id}").hasAnyAuthority("ROLE_HR", "ROLE_EMPLOYEE")
-                        .anyRequest().authenticated()).
-                httpBasic(Customizer.withDefaults()).
-                sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                        .anyRequest().authenticated())
+                .httpBasic(Customizer.withDefaults())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(customAuthenticationEntryPoint))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
