@@ -1,4 +1,4 @@
-package com.project.ResumeBuilder.outdto;
+package com.project.ResumeBuilder.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

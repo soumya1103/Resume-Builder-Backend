@@ -1,9 +1,12 @@
-package com.project.ResumeBuilder.indto;
+package com.project.ResumeBuilder.dtos;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
+
+import java.time.LocalDate;
 
 @Data
 public class UpdateUserInDTO {
@@ -22,4 +25,11 @@ public class UpdateUserInDTO {
             message = "Valid Email not found"
     )
     private String email;
+
+    private String address;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate dob;
+
+    private String gender;
 }

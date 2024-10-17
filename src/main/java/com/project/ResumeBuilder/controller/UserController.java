@@ -1,12 +1,12 @@
 package com.project.ResumeBuilder.controller;
 
 
-import com.project.ResumeBuilder.indto.LoginInDTO;
-import com.project.ResumeBuilder.indto.RegisterInDTO;
-import com.project.ResumeBuilder.indto.UpdateUserInDTO;
-import com.project.ResumeBuilder.outdto.LoginOutDTO;
-import com.project.ResumeBuilder.outdto.SuccessOutDTO;
-import com.project.ResumeBuilder.outdto.UserOutDTO;
+import com.project.ResumeBuilder.dtos.LoginInDTO;
+import com.project.ResumeBuilder.dtos.RegisterInDTO;
+import com.project.ResumeBuilder.dtos.UpdateUserInDTO;
+import com.project.ResumeBuilder.dtos.LoginOutDTO;
+import com.project.ResumeBuilder.dtos.SuccessOutDTO;
+import com.project.ResumeBuilder.dtos.UserOutDTO;
 import com.project.ResumeBuilder.service.UsersService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

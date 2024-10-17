@@ -1,9 +1,9 @@
 package com.project.ResumeBuilder.dtoconvertor;
 
 import com.project.ResumeBuilder.entities.Users;
-import com.project.ResumeBuilder.indto.RegisterInDTO;
-import com.project.ResumeBuilder.outdto.LoginOutDTO;
-import com.project.ResumeBuilder.outdto.UserOutDTO;
+import com.project.ResumeBuilder.dtos.RegisterInDTO;
+import com.project.ResumeBuilder.dtos.LoginOutDTO;
+import com.project.ResumeBuilder.dtos.UserOutDTO;
 
 public class DtoConvertor{
 

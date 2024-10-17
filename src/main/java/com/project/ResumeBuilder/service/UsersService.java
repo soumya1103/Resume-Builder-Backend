@@ -3,15 +3,16 @@ package com.project.ResumeBuilder.service;
 import com.project.ResumeBuilder.constants.ConstantMessage;
 import com.project.ResumeBuilder.dtoconvertor.DtoConvertor;
 import com.project.ResumeBuilder.entities.Users;
+import com.project.ResumeBuilder.enums.Gender;
 import com.project.ResumeBuilder.enums.UserRole;
 import com.project.ResumeBuilder.exception.ResourceConflictException;
 import com.project.ResumeBuilder.exception.ResourceInvalidException;
 import com.project.ResumeBuilder.exception.ResourceNotFoundException;
-import com.project.ResumeBuilder.indto.LoginInDTO;
-import com.project.ResumeBuilder.indto.RegisterInDTO;
-import com.project.ResumeBuilder.indto.UpdateUserInDTO;
-import com.project.ResumeBuilder.outdto.LoginOutDTO;
-import com.project.ResumeBuilder.outdto.UserOutDTO;
+import com.project.ResumeBuilder.dtos.LoginInDTO;
+import com.project.ResumeBuilder.dtos.RegisterInDTO;
+import com.project.ResumeBuilder.dtos.UpdateUserInDTO;
+import com.project.ResumeBuilder.dtos.LoginOutDTO;
+import com.project.ResumeBuilder.dtos.UserOutDTO;
 import com.project.ResumeBuilder.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -60,9 +61,9 @@ public class UsersService {
     public LoginOutDTO login(LoginInDTO loginInDTO) {
 
         try {
-         //   byte[] decodedBytes = Base64.getDecoder().decode(loginInDTO.getPassword());
-          //  String decodedPassword = new String(decodedBytes);
-           // loginInDTO.setPassword(decodedPassword);
+//            byte[] decodedBytes = Base64.getDecoder().decode(loginInDTO.getPassword());
+//            String decodedPassword = new String(decodedBytes);
+//            loginInDTO.setPassword(decodedPassword);
             Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(loginInDTO.getEmail(), loginInDTO.getPassword()));
             if (authentication.isAuthenticated()) {
                 Users user = userRepository.findByEmail(loginInDTO.getEmail());
@@ -122,13 +123,22 @@ public class UsersService {
                         throw new ResourceConflictException(ConstantMessage.USER_ALREADY_EXISTS);
                     }
                 }
+                if (!updateUserInDTO.getGender().isEmpty()) {
+                    if (!Objects.equals(updateUserInDTO.getGender(), "MALE") && !Objects.equals(updateUserInDTO.getGender(), "FEMALE") && !Objects.equals(updateUserInDTO.getGender(), "TRANSGENDER")) {
+                        throw new ResourceInvalidException("Valid Gender Required");
+                    }
+                }
                 updatedUser.setName(updateUserInDTO.getName());
                 updatedUser.setEmail(updateUserInDTO.getEmail());
+                updatedUser.setAddress(updateUserInDTO.getAddress());
+                updatedUser.setDob(updateUserInDTO.getDob());
+                Gender gender = Gender.valueOf(updateUserInDTO.getGender());
+                updatedUser.setGender(gender);
                 userRepository.save(updatedUser);
                 return ConstantMessage.USER_UPDATED_SUCCESSFULLY;
             }
             return ConstantMessage.FAILED_TO_UPDATE_USER;
-        } catch (ResourceConflictException ex) {
+        } catch (ResourceInvalidException | ResourceConflictException ex) {
             throw ex;
         } catch (Exception ex) {
             throw new RuntimeException(ConstantMessage.UNEXPECTED_ERROR_OCCURRED);
