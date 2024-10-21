@@ -20,7 +20,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -113,7 +115,7 @@ public class UsersService {
         }
     }
 
-    public String updateUser(long userId, UpdateUserInDTO updateUserInDTO) {
+    public String updateUser(long userId, UpdateUserInDTO updateUserInDTO, MultipartFile image) {
         try {
             Optional<Users> user = userRepository.findById(userId);
             if(user.isPresent()) {
@@ -128,16 +130,26 @@ public class UsersService {
                         throw new ResourceInvalidException("Valid Gender Required");
                     }
                 }
+                if (image != null && !image.isEmpty()) {
+                    String contentType = image.getContentType();
+                    if (contentType == null || !contentType.startsWith("image/")) {
+                        throw new ResourceInvalidException("Valid Image Required");
+                    }
+                    updatedUser.setImage(image.getBytes());
+                }
                 updatedUser.setName(updateUserInDTO.getName());
                 updatedUser.setEmail(updateUserInDTO.getEmail());
                 updatedUser.setAddress(updateUserInDTO.getAddress());
                 updatedUser.setDob(updateUserInDTO.getDob());
+                updatedUser.setPhone(updateUserInDTO.getPhone());
                 Gender gender = Gender.valueOf(updateUserInDTO.getGender());
                 updatedUser.setGender(gender);
                 userRepository.save(updatedUser);
                 return ConstantMessage.USER_UPDATED_SUCCESSFULLY;
             }
             return ConstantMessage.FAILED_TO_UPDATE_USER;
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to add image");
         } catch (ResourceInvalidException | ResourceConflictException ex) {
             throw ex;
         } catch (Exception ex) {

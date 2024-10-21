@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
@@ -28,8 +29,16 @@ public class UpdateUserInDTO {
 
     private String address;
 
-    @JsonFormat(pattern = "dd/MM/yyyy")
+    private MultipartFile image;
+
+    @JsonFormat(pattern = "yyyy/MM/dd")
     private LocalDate dob;
+
+    @Pattern(
+            regexp = "^[9876]\\d{" + (9) + "}$",
+            message = "Phone number should be valid"
+    )
+    private String phone;
 
     private String gender;
 }
