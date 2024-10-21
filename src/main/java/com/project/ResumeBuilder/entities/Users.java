@@ -38,6 +38,8 @@ public class Users {
 
     private byte[] image;
 
+    private String bio;
+
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
@@ -49,11 +51,11 @@ public class Users {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Users users = (Users) o;
-        return Objects.equals(userId, users.userId) && Objects.equals(email, users.email) && Objects.equals(name, users.name) && Objects.equals(password, users.password) && Objects.equals(address, users.address) && Objects.equals(dob, users.dob) && Objects.equals(phone, users.phone) && Objects.deepEquals(image, users.image) && gender == users.gender && role == users.role;
+        return Objects.equals(userId, users.userId) && Objects.equals(email, users.email) && Objects.equals(name, users.name) && Objects.equals(password, users.password) && Objects.equals(address, users.address) && Objects.equals(dob, users.dob) && Objects.equals(phone, users.phone) && Objects.deepEquals(image, users.image) && Objects.equals(bio, users.bio) && gender == users.gender && role == users.role;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, email, name, password, address, dob, phone, Arrays.hashCode(image), gender, role);
+        return Objects.hash(userId, email, name, password, address, dob, phone, Arrays.hashCode(image), bio, gender, role);
     }
 }

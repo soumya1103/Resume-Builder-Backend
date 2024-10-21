@@ -25,5 +25,7 @@ public class UpdateUserInDTO {
     )
     private String phone;
 
+    private String bio;
+
     private String gender;
 }

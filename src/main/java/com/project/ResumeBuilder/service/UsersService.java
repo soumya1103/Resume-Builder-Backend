@@ -132,6 +132,7 @@ public class UsersService {
                     }
                     updatedUser.setImage(image.getBytes());
                 }
+                updatedUser.setBio(updateUserInDTO.getBio());
                 updatedUser.setAddress(updateUserInDTO.getAddress());
                 updatedUser.setDob(updateUserInDTO.getDob());
                 updatedUser.setPhone(updateUserInDTO.getPhone());
