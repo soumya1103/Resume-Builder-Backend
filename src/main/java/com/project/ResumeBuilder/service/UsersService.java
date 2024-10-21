@@ -63,9 +63,9 @@ public class UsersService {
     public LoginOutDTO login(LoginInDTO loginInDTO) {
 
         try {
-//            byte[] decodedBytes = Base64.getDecoder().decode(loginInDTO.getPassword());
-//            String decodedPassword = new String(decodedBytes);
-//            loginInDTO.setPassword(decodedPassword);
+            byte[] decodedBytes = Base64.getDecoder().decode(loginInDTO.getPassword());
+            String decodedPassword = new String(decodedBytes);
+            loginInDTO.setPassword(decodedPassword);
             Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(loginInDTO.getEmail(), loginInDTO.getPassword()));
             if (authentication.isAuthenticated()) {
                 Users user = userRepository.findByEmail(loginInDTO.getEmail());
@@ -120,11 +120,6 @@ public class UsersService {
             Optional<Users> user = userRepository.findById(userId);
             if(user.isPresent()) {
                 Users updatedUser = user.get();
-                if (!Objects.equals(updatedUser.getEmail(), updateUserInDTO.getEmail())) {
-                    if (userRepository.findByEmail(updateUserInDTO.getEmail()) != null) {
-                        throw new ResourceConflictException(ConstantMessage.USER_ALREADY_EXISTS);
-                    }
-                }
                 if (!updateUserInDTO.getGender().isEmpty()) {
                     if (!Objects.equals(updateUserInDTO.getGender(), "MALE") && !Objects.equals(updateUserInDTO.getGender(), "FEMALE") && !Objects.equals(updateUserInDTO.getGender(), "TRANSGENDER")) {
                         throw new ResourceInvalidException("Valid Gender Required");
@@ -137,8 +132,6 @@ public class UsersService {
                     }
                     updatedUser.setImage(image.getBytes());
                 }
-                updatedUser.setName(updateUserInDTO.getName());
-                updatedUser.setEmail(updateUserInDTO.getEmail());
                 updatedUser.setAddress(updateUserInDTO.getAddress());
                 updatedUser.setDob(updateUserInDTO.getDob());
                 updatedUser.setPhone(updateUserInDTO.getPhone());
