@@ -43,6 +43,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/user-profiles/create").hasAnyAuthority("ROLE_HR", "ROLE_EMPLOYEE")
                         .requestMatchers("/api/user-profiles/update/{id}").hasAnyAuthority("ROLE_HR", "ROLE_EMPLOYEE")
                         .requestMatchers("/api/user-profiles/{id}").hasAnyAuthority("ROLE_HR", "ROLE_EMPLOYEE")
+                        .requestMatchers("/api/user-profiles/user/{userId}").hasAnyAuthority("ROLE_HR", "ROLE_EMPLOYEE")
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
