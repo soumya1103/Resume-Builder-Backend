@@ -14,8 +14,6 @@ public class UpdateUserInDTO {
 
     private String address;
 
-    private MultipartFile image;
-
     @JsonFormat(pattern = "yyyy/MM/dd")
     private LocalDate dob;
 
