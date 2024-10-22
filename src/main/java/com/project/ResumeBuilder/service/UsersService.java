@@ -140,7 +140,7 @@ public class UsersService {
             if(user.isPresent()) {
                 Users updatedUser = user.get();
                 if (!updateUserInDTO.getGender().isEmpty()) {
-                    if (!Objects.equals(updateUserInDTO.getGender(), "MALE") && !Objects.equals(updateUserInDTO.getGender(), "FEMALE") && !Objects.equals(updateUserInDTO.getGender(), "TRANSGENDER")) {
+                    if (!Objects.equals(updateUserInDTO.getGender(), "MALE") && !Objects.equals(updateUserInDTO.getGender(), "FEMALE") && !Objects.equals(updateUserInDTO.getGender(), "OTHER")) {
                         throw new ResourceInvalidException(ConstantMessage.VALID_GENDER_REQUIRED);
                     }
                 }
