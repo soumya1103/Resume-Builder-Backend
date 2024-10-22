@@ -1,12 +1,9 @@
 package com.project.ResumeBuilder.controller;
 
 
-import com.project.ResumeBuilder.dtos.LoginInDTO;
-import com.project.ResumeBuilder.dtos.RegisterInDTO;
-import com.project.ResumeBuilder.dtos.UpdateUserInDTO;
-import com.project.ResumeBuilder.dtos.LoginOutDTO;
-import com.project.ResumeBuilder.dtos.SuccessOutDTO;
-import com.project.ResumeBuilder.dtos.UserOutDTO;
+import com.project.ResumeBuilder.dtos.*;
+import com.project.ResumeBuilder.service.EmailService;
+import com.project.ResumeBuilder.service.OtpService;
 import com.project.ResumeBuilder.service.UsersService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +20,12 @@ public class UserController {
 
     @Autowired
     private UsersService usersService;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private OtpService otpService;
 
     @PostMapping("/register")
     public ResponseEntity<SuccessOutDTO> registerUser(@Valid  @RequestBody RegisterInDTO registerInDTO) {
@@ -43,6 +46,12 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
+    @GetMapping("/profile/{id}")
+    public ResponseEntity<UserProfileDetailsOutDTO> findUserProfile(@PathVariable("id") long userId) {
+        UserProfileDetailsOutDTO user = usersService.findUserProfile(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(user);
+    }
+
     @GetMapping("/all")
     public ResponseEntity<List<UserOutDTO>> getAllUser() {
         List<UserOutDTO> userRespons = usersService.findAll();
@@ -50,9 +59,21 @@ public class UserController {
     }
 
     @PutMapping("/update/{userId}")
-    public ResponseEntity<SuccessOutDTO> updateUser(@PathVariable("userId") long usedId, @ModelAttribute @Valid UpdateUserInDTO updateUserInDTO, @RequestParam(value = "image", required = false) final MultipartFile image) {
-        String response = usersService.updateUser(usedId, updateUserInDTO, image);
+    public ResponseEntity<SuccessOutDTO> updateUser(@PathVariable("userId") long usedId, @RequestBody @Valid UpdateUserInDTO updateUserInDTO) {
+        String response = usersService.updateUser(usedId, updateUserInDTO);
         SuccessOutDTO successOutDTO = new SuccessOutDTO(response);
         return ResponseEntity.status(HttpStatus.OK).body(successOutDTO);
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<SuccessOutDTO> forgotPassword(@RequestParam String email) {
+        String response = usersService.forgotPassword(email);
+        return ResponseEntity.status(HttpStatus.OK).body(new SuccessOutDTO(response));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<SuccessOutDTO> resetPassword(@RequestParam String email, @RequestParam String otp, @RequestParam String newPassword) {
+        String response = usersService.resetPassword(email,otp,newPassword);
+        return ResponseEntity.status(HttpStatus.OK).body(new SuccessOutDTO(response));
     }
 }

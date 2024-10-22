@@ -37,6 +37,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults()) // Enable CORS
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/users/login", "/users/register").permitAll()
+                        .requestMatchers("/users/forgot-password", "/users/reset-password").permitAll()
                         .requestMatchers("/api/user-profiles/getAllProfile").hasAuthority("ROLE_HR")
                         .requestMatchers("/api/user-profiles/{id}/delete").hasAuthority("ROLE_HR")
                         .requestMatchers("/api/user-profiles/create").hasAnyAuthority("ROLE_HR", "ROLE_EMPLOYEE")

@@ -2,19 +2,16 @@ package com.project.ResumeBuilder.service;
 
 import com.project.ResumeBuilder.constants.ConstantMessage;
 import com.project.ResumeBuilder.dtoconvertor.DtoConvertor;
+import com.project.ResumeBuilder.dtos.*;
 import com.project.ResumeBuilder.entities.Users;
 import com.project.ResumeBuilder.enums.Gender;
 import com.project.ResumeBuilder.enums.UserRole;
 import com.project.ResumeBuilder.exception.ResourceConflictException;
 import com.project.ResumeBuilder.exception.ResourceInvalidException;
 import com.project.ResumeBuilder.exception.ResourceNotFoundException;
-import com.project.ResumeBuilder.dtos.LoginInDTO;
-import com.project.ResumeBuilder.dtos.RegisterInDTO;
-import com.project.ResumeBuilder.dtos.UpdateUserInDTO;
-import com.project.ResumeBuilder.dtos.LoginOutDTO;
-import com.project.ResumeBuilder.dtos.UserOutDTO;
 import com.project.ResumeBuilder.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -37,6 +34,12 @@ public class UsersService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private OtpService otpService;
+
+    @Autowired
+    private EmailService emailService;
+
 
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
@@ -52,7 +55,7 @@ public class UsersService {
             userRepository.save(user);
             return ConstantMessage.USER_REGISTERED_SUCCESSFULLY;
         } catch (IllegalArgumentException e) {
-            throw new ResourceInvalidException("Invalid role. Allowed values: ROLE_HR, ROLE_EMPLOYEE");
+            throw new ResourceInvalidException(ConstantMessage.VALID_ROLE_REQUIRED);
         } catch (ResourceConflictException | ResourceInvalidException ex) {
             throw ex;
         } catch (Exception ex) {
@@ -74,7 +77,7 @@ public class UsersService {
                 loginOutDTO.setToken(jwtService.generateToken(loginInDTO.getEmail(), role));
                 return loginOutDTO;
             }
-            throw new ResourceInvalidException("Invalid Credentials");
+            throw new ResourceInvalidException(ConstantMessage.INVALID_CREDENTIALS);
         } catch (ResourceInvalidException ex) {
             throw ex;
         }
@@ -85,8 +88,24 @@ public class UsersService {
             Optional<Users> user = userRepository.findById(userId);
             if (user.isPresent()) {
                 Users users = user.get();
-                UserOutDTO userOutDTO = DtoConvertor.convertToResponse(users);
+                UserOutDTO userOutDTO = DtoConvertor.convertToUserOutDTO(users);
                 return userOutDTO;
+            }
+            throw new ResourceNotFoundException(ConstantMessage.USER_NOT_FOUND);
+        } catch (ResourceNotFoundException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw new RuntimeException(ConstantMessage.UNEXPECTED_ERROR_OCCURRED);
+        }
+    }
+
+    public UserProfileDetailsOutDTO findUserProfile(long userId) {
+        try {
+            Optional<Users> user = userRepository.findById(userId);
+            if (user.isPresent()) {
+                Users users = user.get();
+                UserProfileDetailsOutDTO userProfileDetailsOutDTO = DtoConvertor.convertToUserProfileDetailsOutDTO(users);
+                return userProfileDetailsOutDTO;
             }
             throw new ResourceNotFoundException(ConstantMessage.USER_NOT_FOUND);
         } catch (ResourceNotFoundException ex) {
@@ -101,7 +120,7 @@ public class UsersService {
             List<Users> users = userRepository.findAll();
             List<UserOutDTO> userOutDTOS = new ArrayList<>();
             for (Users user : users) {
-                UserOutDTO userOutDTO = DtoConvertor.convertToResponse(user);
+                UserOutDTO userOutDTO = DtoConvertor.convertToUserOutDTO(user);
                 userOutDTOS.add(userOutDTO);
             }
             if(users.isEmpty()) {
@@ -115,22 +134,15 @@ public class UsersService {
         }
     }
 
-    public String updateUser(long userId, UpdateUserInDTO updateUserInDTO, MultipartFile image) {
+    public String updateUser(long userId, UpdateUserInDTO updateUserInDTO) {
         try {
             Optional<Users> user = userRepository.findById(userId);
             if(user.isPresent()) {
                 Users updatedUser = user.get();
                 if (!updateUserInDTO.getGender().isEmpty()) {
                     if (!Objects.equals(updateUserInDTO.getGender(), "MALE") && !Objects.equals(updateUserInDTO.getGender(), "FEMALE") && !Objects.equals(updateUserInDTO.getGender(), "TRANSGENDER")) {
-                        throw new ResourceInvalidException("Valid Gender Required");
+                        throw new ResourceInvalidException(ConstantMessage.VALID_GENDER_REQUIRED);
                     }
-                }
-                if (image != null && !image.isEmpty()) {
-                    String contentType = image.getContentType();
-                    if (contentType == null || !contentType.startsWith("image/")) {
-                        throw new ResourceInvalidException("Valid Image Required");
-                    }
-                    updatedUser.setImage(image.getBytes());
                 }
                 updatedUser.setBio(updateUserInDTO.getBio());
                 updatedUser.setAddress(updateUserInDTO.getAddress());
@@ -142,9 +154,47 @@ public class UsersService {
                 return ConstantMessage.USER_UPDATED_SUCCESSFULLY;
             }
             return ConstantMessage.FAILED_TO_UPDATE_USER;
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to add image");
         } catch (ResourceInvalidException | ResourceConflictException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw new RuntimeException(ConstantMessage.UNEXPECTED_ERROR_OCCURRED);
+        }
+    }
+
+    public String forgotPassword(String email) {
+        try {
+            Users user = userRepository.findByEmail(email);
+            if (user == null) {
+                throw new ResourceNotFoundException(ConstantMessage.USER_NOT_FOUND);
+            }
+
+            String otp = otpService.generateOtp(email);
+            emailService.sendOtp(email, otp);
+            return ConstantMessage.OTP_SENT;
+        } catch (ResourceNotFoundException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw new RuntimeException(ConstantMessage.UNEXPECTED_ERROR_OCCURRED);
+        }
+    }
+
+    public String resetPassword(String email, String otp, String newPassword) {
+        try {
+            if (!otpService.validateOtp(email, otp)) {
+                throw new ResourceInvalidException(ConstantMessage.INVALID_OTP);
+            }
+
+            Users user = userRepository.findByEmail(email);
+            if (user == null) {
+                throw new ResourceNotFoundException(ConstantMessage.USER_NOT_FOUND);
+            }
+
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            user.setPassword(encoder.encode(newPassword));
+            userRepository.save(user);
+            otpService.clearOtp(email);
+            return ConstantMessage.PASSWORD_RESET_SUCCESSFULLY;
+        } catch (ResourceNotFoundException | ResourceInvalidException ex) {
             throw ex;
         } catch (Exception ex) {
             throw new RuntimeException(ConstantMessage.UNEXPECTED_ERROR_OCCURRED);
