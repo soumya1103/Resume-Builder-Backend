@@ -66,8 +66,8 @@ public class UsersService {
     public LoginOutDTO login(LoginInDTO loginInDTO) {
 
         try {
-            byte[] decodedBytes = Base64.getDecoder().decode(loginInDTO.getPassword());
-            String decodedPassword = new String(decodedBytes);
+//            byte[] decodedBytes = Base64.getDecoder().decode(loginInDTO.getPassword());
+//            String decodedPassword = new String(decodedBytes);
             //loginInDTO.setPassword(decodedPassword);
             Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(loginInDTO.getEmail(), loginInDTO.getPassword()));
             if (authentication.isAuthenticated()) {
@@ -195,6 +195,29 @@ public class UsersService {
             otpService.clearOtp(email);
             return ConstantMessage.PASSWORD_RESET_SUCCESSFULLY;
         } catch (ResourceNotFoundException | ResourceInvalidException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw new RuntimeException(ConstantMessage.UNEXPECTED_ERROR_OCCURRED);
+        }
+    }
+
+    public String changePassword(long userId, ChangePasswordDto changePasswordDTO) {
+        try {
+            Optional<Users> userOptional = userRepository.findById(userId);
+            if (userOptional.isPresent()) {
+                Users user = userOptional.get();
+
+                if (!encoder.matches(changePasswordDTO.getCurrentPassword(), user.getPassword())) {
+                    throw new ResourceConflictException(ConstantMessage.CURRENT_PASSWORD_INCORRECT);
+                }
+
+                user.setPassword(encoder.encode(changePasswordDTO.getNewPassword()));
+                userRepository.save(user);
+                return ConstantMessage.PASSWORD_UPDATED_SUCCESSFULLY;
+            } else {
+                throw new ResourceNotFoundException(ConstantMessage.USER_NOT_FOUND);
+            }
+        } catch (ResourceNotFoundException ex) {
             throw ex;
         } catch (Exception ex) {
             throw new RuntimeException(ConstantMessage.UNEXPECTED_ERROR_OCCURRED);

@@ -76,4 +76,13 @@ public class UserController {
         String response = usersService.resetPassword(email,otp,newPassword);
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessOutDTO(response));
     }
+
+    @PostMapping("/{userId}/change-password")
+    public ResponseEntity<SuccessOutDTO> changePassword(
+            @PathVariable("userId") long userId,
+            @Valid @RequestBody ChangePasswordDto changePasswordDTO) {
+        String response = usersService.changePassword(userId, changePasswordDTO);
+        SuccessOutDTO successOutDTO = new SuccessOutDTO(response);
+        return ResponseEntity.status(HttpStatus.OK).body(successOutDTO);
+    }
 }

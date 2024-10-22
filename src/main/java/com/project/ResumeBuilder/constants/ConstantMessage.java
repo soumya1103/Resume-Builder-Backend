@@ -28,4 +28,8 @@ public class ConstantMessage {
     public static final String INVALID_OTP = "Invalid OTP";
 
     public static final String PASSWORD_RESET_SUCCESSFULLY = "Password reset successfully";
+
+    public static final String PASSWORD_UPDATED_SUCCESSFULLY = "Password updated successfully";
+
+    public static final String CURRENT_PASSWORD_INCORRECT="Current Password is incorrect";
 }
