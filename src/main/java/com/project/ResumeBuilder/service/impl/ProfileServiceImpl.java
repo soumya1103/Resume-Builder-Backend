@@ -26,6 +26,24 @@ public class ProfileServiceImpl implements ProfileService {
     private ProfileRepository profileRepository;
 
     @Override
+    public CommonResponseDto createProfile(Long id, ProfileDto profileDto) {
+
+        Profile profile = profileRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(ProfileConstants.PROFILE_NOT_FOUND + id));
+
+        profile.setUserId(profileDto.getUserId());
+        profile.setProfileName(profileDto.getProfileName());
+        profile.setContactNo(profileDto.getContactNo());
+        profile.setObjective(profileDto.getObjective());
+        profile.setProfileData(profileDto.getProfileData());
+        profile.setCreatedAt(LocalDateTime.now());// Set ProfileDataDto
+        profileRepository.save(profile);
+        CommonResponseDto message=new CommonResponseDto();
+        message.setMessage(ProfileConstants.PROFILE_CREATED_SUCCESSFULLY);
+        return message;}
+
+
+  /*  @Override
     public CommonResponseDto createProfile(ProfileDto profileDto) {
 
         Profile profile = new Profile();
@@ -40,7 +58,7 @@ public class ProfileServiceImpl implements ProfileService {
         message.setMessage(ProfileConstants.PROFILE_CREATED_SUCCESSFULLY);
         return message;
 
-    }
+    }*/
 
     @Override
     public CommonResponseDto updateProfile(Long id, @Valid ProfileUpdateDto profileDto) {
@@ -112,6 +130,19 @@ public class ProfileServiceImpl implements ProfileService {
         responseDto.setIsDeleted(profile.getIsDeleted());
         return responseDto;
     }
+    @PostMapping
+    public JobTitleResponseDto createJobTitle(@RequestBody JobTitleDto jobTitleDto) {
+        //JobTitle jobTitle = new JobTitle();
+
+        Profile profile = new Profile();
+        profile.setJobTitle(jobTitleDto.getTitle());
+        profileRepository.save(profile);
+        JobTitleResponseDto jobTitle = new JobTitleResponseDto();
+        jobTitle.setId(profile.getId());
+        return jobTitle;
+
+    }
+
 
 
 

@@ -9,13 +9,13 @@ import java.util.List;
 
 public interface ProfileService {
 
-    CommonResponseDto createProfile(ProfileDto profileDto);
+    CommonResponseDto createProfile(Long id,ProfileDto profileDto);
     CommonResponseDto updateProfile(Long id, @Valid ProfileUpdateDto profileDto);
     ProfileResponseDto getProfileById(Long id);
     CommonResponseDto deleteProfile(Long profileId);
     List<ProfileResponseDto> getAllProfiles();
     List<ProfileResponseDto> getProfilesByUserId(Long userId);
-
+    JobTitleResponseDto createJobTitle(JobTitleDto jobTitleDto);
 
 
 }

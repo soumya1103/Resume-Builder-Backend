@@ -19,6 +19,9 @@ public class Profile {
     @Column(name = "user_id")
     private Integer userId;
 
+    @Column(name="jobTitle")
+    private String jobTitle;
+
     @Column(name = "profile_name")
     private String profileName;
 
@@ -56,6 +59,14 @@ public class Profile {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public String getJobTitle() {
+        return jobTitle;
+    }
+
+    public void setJobTitle(String jobTitle) {
+        this.jobTitle = jobTitle;
     }
 
     public String getProfileName() {
@@ -113,6 +124,9 @@ public class Profile {
     public void setDeletedAt(LocalDateTime deletedAt) {
         this.deletedAt = deletedAt;
     }
+
+
+
 
 
 }
