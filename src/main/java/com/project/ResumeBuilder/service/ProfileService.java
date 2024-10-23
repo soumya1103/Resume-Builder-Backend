@@ -1,9 +1,8 @@
 package com.project.ResumeBuilder.service;
-import com.project.ResumeBuilder.dtos.CommonResponseDto;
-import com.project.ResumeBuilder.dtos.ProfileDto;
-import com.project.ResumeBuilder.dtos.ProfileResponseDto;
-import com.project.ResumeBuilder.dtos.ProfileUpdateDto;
+import com.project.ResumeBuilder.dtos.*;
 import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -16,6 +15,7 @@ public interface ProfileService {
     CommonResponseDto deleteProfile(Long profileId);
     List<ProfileResponseDto> getAllProfiles();
     List<ProfileResponseDto> getProfilesByUserId(Long userId);
+
 
 
 }

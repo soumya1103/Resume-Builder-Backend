@@ -1,8 +1,5 @@
 package com.project.ResumeBuilder.controller;
-import com.project.ResumeBuilder.dtos.CommonResponseDto;
-import com.project.ResumeBuilder.dtos.ProfileDto;
-import com.project.ResumeBuilder.dtos.ProfileResponseDto;
-import com.project.ResumeBuilder.dtos.ProfileUpdateDto;
+import com.project.ResumeBuilder.dtos.*;
 import com.project.ResumeBuilder.service.ProfileService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +16,7 @@ public class ProfileController {
 
     @Autowired
     private ProfileService profileService;
+
 
     @PostMapping("/create")
     public ResponseEntity<CommonResponseDto> createProfile(@RequestBody ProfileDto profileDto) {
@@ -53,7 +51,6 @@ public class ProfileController {
         List<ProfileResponseDto> profiles = profileService.getAllProfiles();
         return new ResponseEntity<>(profiles, HttpStatus.OK);
     }
-
 
 
 }

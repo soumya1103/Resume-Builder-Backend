@@ -61,7 +61,7 @@ public class UsersService {
 
         try {
          //   byte[] decodedBytes = Base64.getDecoder().decode(loginInDTO.getPassword());
-          //  String decodedPassword = new String(decodedBytes);
+           // String decodedPassword = new String(decodedBytes);
            // loginInDTO.setPassword(decodedPassword);
             Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(loginInDTO.getEmail(), loginInDTO.getPassword()));
             if (authentication.isAuthenticated()) {

@@ -1,16 +1,16 @@
 package com.project.ResumeBuilder.service.impl;
 import com.project.ResumeBuilder.constants.ProfileConstants;
-import com.project.ResumeBuilder.dtos.CommonResponseDto;
-import com.project.ResumeBuilder.dtos.ProfileDto;
-import com.project.ResumeBuilder.dtos.ProfileResponseDto;
-import com.project.ResumeBuilder.dtos.ProfileUpdateDto;
+import com.project.ResumeBuilder.dtos.*;
 import com.project.ResumeBuilder.entities.Profile;
 import com.project.ResumeBuilder.exception.NotFoundException;
 import com.project.ResumeBuilder.repository.ProfileRepository;
 import com.project.ResumeBuilder.service.ProfileService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 
 import java.time.LocalDateTime;
@@ -26,7 +26,8 @@ public class ProfileServiceImpl implements ProfileService {
     private ProfileRepository profileRepository;
 
     @Override
-    public CommonResponseDto createProfile(@Valid ProfileDto profileDto) {
+    public CommonResponseDto createProfile(ProfileDto profileDto) {
+
         Profile profile = new Profile();
         profile.setUserId(profileDto.getUserId());
         profile.setProfileName(profileDto.getProfileName());
@@ -111,6 +112,7 @@ public class ProfileServiceImpl implements ProfileService {
         responseDto.setIsDeleted(profile.getIsDeleted());
         return responseDto;
     }
+
 
 
 }
