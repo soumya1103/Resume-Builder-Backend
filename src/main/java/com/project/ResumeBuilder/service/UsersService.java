@@ -66,9 +66,9 @@ public class UsersService {
     public LoginOutDTO login(LoginInDTO loginInDTO) {
 
         try {
-//            byte[] decodedBytes = Base64.getDecoder().decode(loginInDTO.getPassword());
-//            String decodedPassword = new String(decodedBytes);
-            //loginInDTO.setPassword(decodedPassword);
+            byte[] decodedBytes = Base64.getDecoder().decode(loginInDTO.getPassword());
+            String decodedPassword = new String(decodedBytes);
+            loginInDTO.setPassword(decodedPassword);
             Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(loginInDTO.getEmail(), loginInDTO.getPassword()));
             if (authentication.isAuthenticated()) {
                 Users user = userRepository.findByEmail(loginInDTO.getEmail());
@@ -189,8 +189,10 @@ public class UsersService {
                 throw new ResourceNotFoundException(ConstantMessage.USER_NOT_FOUND);
             }
 
+            byte[] decodedBytes = Base64.getDecoder().decode(newPassword);
+            String decodedPassword = new String(decodedBytes);
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-            user.setPassword(encoder.encode(newPassword));
+            user.setPassword(encoder.encode(decodedPassword));
             userRepository.save(user);
             otpService.clearOtp(email);
             return ConstantMessage.PASSWORD_RESET_SUCCESSFULLY;
