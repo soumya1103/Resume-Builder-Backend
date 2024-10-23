@@ -1,4 +1,4 @@
-package com.project.ResumeBuilder.indto;
+package com.project.ResumeBuilder.dtos;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

@@ -20,4 +20,16 @@ public class ConstantMessage {
     public static final int MIN_PASSWORD_LENGTH = 8;
 
     public static final String VALID_ROLE_REQUIRED = "Valid role required";
+
+    public static final String VALID_GENDER_REQUIRED = "Valid gender required";
+
+    public static final String OTP_SENT = "OTP Sent to mail";
+
+    public static final String INVALID_OTP = "Invalid OTP";
+
+    public static final String PASSWORD_RESET_SUCCESSFULLY = "Password reset successfully";
+
+    public static final String PASSWORD_UPDATED_SUCCESSFULLY = "Password updated successfully";
+
+    public static final String CURRENT_PASSWORD_INCORRECT="Current Password is incorrect";
 }
