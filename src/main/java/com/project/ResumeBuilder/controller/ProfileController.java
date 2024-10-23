@@ -1,6 +1,7 @@
 package com.project.ResumeBuilder.controller;
 import com.project.ResumeBuilder.dtos.*;
 import com.project.ResumeBuilder.service.ProfileService;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,11 +42,13 @@ public class ProfileController {
         CommonResponseDto response=  profileService.deleteProfile(id);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    @Transactional
     @GetMapping("/user/{userId}")
    public ResponseEntity<List<ProfileResponseDto>> getProfilesByUserId(@PathVariable Long userId) {
        List<ProfileResponseDto> profileResponse = profileService.getProfilesByUserId(userId);
        return new ResponseEntity<>(profileResponse, HttpStatus.OK);
    }
+    @Transactional
     @GetMapping("/getAllProfile")
     public ResponseEntity<List<ProfileResponseDto>> getAllProfiles() {
         List<ProfileResponseDto> profiles = profileService.getAllProfiles();
@@ -56,6 +59,12 @@ public class ProfileController {
     public ResponseEntity<JobTitleResponseDto> createJobTitle(@RequestBody JobTitleDto jobTitleDto) {
         JobTitleResponseDto jobTitle=profileService.createJobTitle(jobTitleDto);
         return new ResponseEntity<>(jobTitle, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/colleges")
+    public List<String> getAllCollegeNames()
+    {
+        return profileService.getAllCollegeNames();
     }
 
 

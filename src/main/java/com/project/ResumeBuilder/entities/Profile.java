@@ -29,6 +29,7 @@ public class Profile {
     private String contactNo;
 
     @Lob
+    @Basic(fetch = FetchType.EAGER)
     @Column(name = "objective")
     private String objective;
 

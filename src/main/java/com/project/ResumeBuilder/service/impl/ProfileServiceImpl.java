@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -128,8 +129,10 @@ public class ProfileServiceImpl implements ProfileService {
         responseDto.setCreatedAt(profile.getCreatedAt());
         responseDto.setProfileData(profile.getProfileData());
         responseDto.setIsDeleted(profile.getIsDeleted());
+        responseDto.setJobTitle(profile.getJobTitle());
         return responseDto;
     }
+
     @PostMapping
     public JobTitleResponseDto createJobTitle(@RequestBody JobTitleDto jobTitleDto) {
         //JobTitle jobTitle = new JobTitle();
@@ -142,6 +145,22 @@ public class ProfileServiceImpl implements ProfileService {
         return jobTitle;
 
     }
+
+    @Override
+    public List<String> getAllCollegeNames()
+    {
+        List<String> collegeNames=new ArrayList<>();
+        Profile profile=new Profile();
+        for(EducationDto education:profile.getProfileData().getEducation())
+        {
+            collegeNames.add(education.getCollegeName());
+        }
+
+        return collegeNames;
+
+    }
+
+
 
 
 
